@@ -38,23 +38,24 @@ def drawRect(img, start, end):
 def subHist(imgA, imgB):
     histA = cv2.calcHist([imgA], [0], None, [256], [0, 256]).flatten()
     histB = cv2.calcHist([imgB], [0], None, [256], [0, 256]).flatten()
-    normalizator = sum(histA)/sum(histB)
+    normalizatorA = 100/sum(histA)
+    normalizatorB = 100/sum(histB)
     mistake = 0
     for a, b in zip(histA, histB):
-        mistake += abs(a**2-(b*normalizator)**2)
+        mistake += abs((a*normalizatorA)**2-(b*normalizatorB)**2)
     return mistake
 
 def scaleShapes(template_shape, max_shape, accuracy_step= 0.5, min_shape_perc = 0.5):
     sh = template_shape
-    shapes = [sh]
+    shapes = []
     min_shape = (int(sh[0]*min_shape_perc), int(sh[1]*min_shape_perc))
     minratio = max(min_shape[0]/sh[0], min_shape[1]/sh[1])
     maxratio = min(max_shape[0]/sh[0], max_shape[1]/sh[1])
-    # for r in np.arange(minratio, maxratio, accuracy_step):
-    #     shapes.append((int(round(sh[0]*r)), int(round(sh[1]*r))))
+    for r in np.arange(minratio, maxratio, accuracy_step):
+        shapes.append((int(round(sh[0]*r)), int(round(sh[1]*r))))
     return shapes
 
-def matchTemplate(template, image, filter_accuracy_step = 3, sample_pixel_step = 10, cv2color = cv2.COLOR_BGR2GRAY):
+def matchTemplate(template, image, filter_accuracy_step = 0.4, sample_pixel_step = 10, cv2color = cv2.COLOR_BGR2GRAY):
     shapes = scaleShapes(template.shape, image.shape, accuracy_step = filter_accuracy_step)
     print(shapes)
     samples = []
@@ -70,7 +71,6 @@ def matchTemplate(template, image, filter_accuracy_step = 3, sample_pixel_step =
                 hs = h*sample_pixel_step
                 he = h*sample_pixel_step+shape[0]
                 samples.append([image[hs:he, ws:we], (hs,he,ws,we), None])
-                #cvImshow(samples[-1][0])
     samples = np.array(samples)
     for said, sample in enumerate(samples):
         if (said)%5000 ==0:
@@ -82,10 +82,12 @@ def matchTemplate(template, image, filter_accuracy_step = 3, sample_pixel_step =
 if __name__ == "__main__":
     imgA = loadImage("./images/pikachu.png")
     imgB = loadImage("./images/achu.png")
-    imgC = loadImage("./images/achu2.png")
+    imgC = loadImage("./images/ika.png")
     imgD = loadImage("./images/accantus.png")
     imgE = loadImage("./images/tus.png")
-    imgF = loadImage("./images/acc.png")
+    imgF = loadImage("./images/acc2.png")
+    imgG = loadImage("./images/photo.png")
+    imgH = loadImage("./images/oto.png")
 
     grayA = cv2.cvtColor(imgA, cv2.COLOR_BGR2GRAY)
     grayB = cv2.cvtColor(imgB, cv2.COLOR_BGR2GRAY)
@@ -93,9 +95,11 @@ if __name__ == "__main__":
     grayD = cv2.cvtColor(imgD, cv2.COLOR_BGR2GRAY)
     grayE = cv2.cvtColor(imgE, cv2.COLOR_BGR2GRAY)
     grayF = cv2.cvtColor(imgF, cv2.COLOR_BGR2GRAY)
+    grayG = cv2.cvtColor(imgG, cv2.COLOR_BGR2GRAY)
+    grayH = cv2.cvtColor(imgH, cv2.COLOR_BGR2GRAY)
 
 
-    found = matchTemplate(grayF, grayD)
-    imgfound = drawRect(imgD, (found[1][2],found[1][0]), (found[1][3],found[1][1]))
+    found = matchTemplate(grayH, grayG)
+    imgfound = drawRect(imgG, (found[1][2],found[1][0]), (found[1][3],found[1][1]))
 
     cvImshow(imgfound)
