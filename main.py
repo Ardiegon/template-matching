@@ -45,7 +45,7 @@ def subHist(imgA, imgB):
         mistake += abs((a*normalizatorA)**2-(b*normalizatorB)**2)
     return mistake
 
-def scaleShapes(template_shape, max_shape, accuracy_step= 0.5, min_shape_perc = 0.5):
+def scaleShapes(template_shape, max_shape, accuracy_step= 0.5, min_shape_perc = 0.2):
     sh = template_shape
     shapes = []
     min_shape = (int(sh[0]*min_shape_perc), int(sh[1]*min_shape_perc))
@@ -80,8 +80,8 @@ def matchTemplate(template, image, filter_accuracy_step = 0.4, sample_pixel_step
     return samples[best_sample_id]
 
 if __name__ == "__main__":
-    imgA = loadImage("./images/pikachu.png")
-    imgB = loadImage("./images/achu.png")
+    imgA = loadImage("./images/Cars.png")
+    imgB = loadImage("./images/car.png")
     imgC = loadImage("./images/ika.png")
     imgD = loadImage("./images/accantus.png")
     imgE = loadImage("./images/tus.png")
