@@ -57,7 +57,7 @@ def scaleShapes(template_shape, max_shape, accuracy_step= 0.5, min_shape_perc = 
 
 def matchTemplate(template, image, filter_accuracy_step = 0.4, sample_pixel_step = 10, cv2color = cv2.COLOR_BGR2GRAY):
     shapes = scaleShapes(template.shape, image.shape, accuracy_step = filter_accuracy_step)
-    print(shapes)
+    shapes = shapes[:1]
     samples = []
     for shid, shape in enumerate(shapes):
         wsteps = math.ceil((image.shape[1]-shape[1])/sample_pixel_step)
@@ -80,26 +80,16 @@ def matchTemplate(template, image, filter_accuracy_step = 0.4, sample_pixel_step
     return samples[best_sample_id]
 
 if __name__ == "__main__":
-    imgA = loadImage("./images/Cars.png")
-    imgB = loadImage("./images/car.png")
-    imgC = loadImage("./images/ika.png")
-    imgD = loadImage("./images/accantus.png")
-    imgE = loadImage("./images/tus.png")
-    imgF = loadImage("./images/acc2.png")
-    imgG = loadImage("./images/photo.png")
-    imgH = loadImage("./images/oto.png")
+    imgA = loadImage("./images/sejm.png")
+    imgB = loadImage("./images/warszawa.png")
+
 
     grayA = cv2.cvtColor(imgA, cv2.COLOR_BGR2GRAY)
     grayB = cv2.cvtColor(imgB, cv2.COLOR_BGR2GRAY)
-    grayC = cv2.cvtColor(imgC, cv2.COLOR_BGR2GRAY)
-    grayD = cv2.cvtColor(imgD, cv2.COLOR_BGR2GRAY)
-    grayE = cv2.cvtColor(imgE, cv2.COLOR_BGR2GRAY)
-    grayF = cv2.cvtColor(imgF, cv2.COLOR_BGR2GRAY)
-    grayG = cv2.cvtColor(imgG, cv2.COLOR_BGR2GRAY)
-    grayH = cv2.cvtColor(imgH, cv2.COLOR_BGR2GRAY)
 
 
-    found = matchTemplate(grayH, grayG)
-    imgfound = drawRect(imgG, (found[1][2],found[1][0]), (found[1][3],found[1][1]))
+    found = matchTemplate(grayA, grayB)
+    imgfound = drawRect(imgB, (found[1][2],found[1][0]), (found[1][3],found[1][1]))
 
-    cvImshow(imgfound)
+    #cvImshow(imgfound)
+    cv2.imwrite("./results/result.png", imgfound)
